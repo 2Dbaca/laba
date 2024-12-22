@@ -8,7 +8,5 @@ line = set(input("Введите строку: "))
 sym = set()
 
 for s in line:
-    if s.isdigit() or s.isalpha():
-        sym.add(s)
-
+    sym.add(s)
 print(lenght(sym), sym)
