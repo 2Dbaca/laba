@@ -1,0 +1,101 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
+graph = {1: [2, 3], 2: [3, 4], 3: [4, 5], 4: [5, 6], 5: [6], 6: []}
+
+def bfs(graph, start):
+    visited = set()
+    queue = [start]
+    visited.add(start)
+    path = []
+
+    while queue:
+        node = queue.pop(0)
+        path.append(node)
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    return path
+
+G = nx.DiGraph()
+for node, neighbors in graph.items():
+    for neighbor in neighbors:
+        G.add_edge(node, neighbor)
+
+
+pos = nx.spring_layout(G, seed=42)
+
+
+plt.figure(figsize=(10, 6))
+plt.ion()
+
+
+nx.draw(G, pos, with_labels=True, node_size=800,
+        node_color="lightblue", arrows=True,
+        edge_color='gray', width=1.5)
+plt.title("Граф 1 - Начальное состояние")
+plt.axis('off')
+plt.show()
+plt.pause(2)
+
+
+visited = set()
+queue = [1]
+visited.add(1)
+path = []
+
+step = 1
+while queue:
+    node = queue.pop(0)
+    path.append(node)
+
+
+    plt.clf()
+
+
+    nx.draw_networkx_nodes(G, pos, node_size=800, node_color="lightblue")
+    nx.draw_networkx_labels(G, pos)
+    nx.draw_networkx_edges(G, pos, edge_color='gray', width=1.5, arrows=True)
+
+
+    nx.draw_networkx_nodes(G, pos, nodelist=path,
+                         node_size=800, node_color="green")
+
+    nx.draw_networkx_nodes(G, pos, nodelist=[node],
+                         node_size=800, node_color="red")
+
+
+    if len(path) > 1:
+        edges = []
+        for i in range(len(path) - 1):
+            if path[i + 1] in graph[path[i]]:
+                edges.append((path[i], path[i + 1]))
+        nx.draw_networkx_edges(G, pos, edgelist=edges,
+                             edge_color='red', width=2.5, arrows=True)
+
+    plt.title(f"Граф 1 - BFS (Шаг {step}): Обрабатываем вершину {node}")
+    plt.axis('off')
+    plt.pause(2)
+    step += 1
+
+
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            visited.add(neighbor)
+            queue.append(neighbor)
+
+
+plt.clf()
+nx.draw(G, pos, with_labels=True, node_size=800,
+        node_color="green", arrows=True,
+        edge_color='gray', width=1.5)
+plt.title("Граф 1 - BFS завершен. Порядок обхода: " + str(path))
+plt.axis('off')
+plt.pause(3)
+
+plt.ioff()
+plt.show()
+
+print("Порядок обхода BFS:", path)
