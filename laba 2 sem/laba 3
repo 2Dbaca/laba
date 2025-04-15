@@ -1,0 +1,35 @@
+from collections import deque
+
+graph1 = {
+    1: [2, 3],
+    2: [4, 5],
+    3: [5],
+    4: [6],
+    5: [6],
+    6: []
+}
+
+graph2 = {
+    1: [2, 3],
+    2: [3, 4],
+    3: [4, 5],
+    4: [5, 6],
+    5: [6],
+    6: []
+}
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    path = []
+
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            visited.add(node)
+            path.append(node)
+            queue.extend(graph[node])
+    return path
+
+print("Путь в графе 1:", bfs(graph1, 1))
+print("Путь в графе 2:", bfs(graph2, 1))
